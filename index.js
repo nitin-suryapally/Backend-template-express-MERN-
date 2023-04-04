@@ -4,7 +4,7 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const cors = require("cors");
-const errorHandler = require("./middleware/errorHandler")
+const errorHandler = require("./middleware/errorHandler");
 
 const PORT = process.env.port || 3500;
 
@@ -46,23 +46,30 @@ app.use(express.json());
 // for loading static file like cs , images and js
 
 app.use(express.static(path.join(__dirname, "/public")));
+app.use("/subdir", express.static(path.join(__dirname, "/public")));
 
-app.get("^/$|index(.html)?", (req, res) => {
-  // res.send("hello world!") sending only plain text
-  // res.sendFile("./views/index.html" , {root: __dirname}) one way to do it;
+app.use("/", require("./routers/root"));
 
-  res.sendFile(path.join(__dirname, "views", "index.html")); // using path
-});
-app.get("/new-page(.html)?", (req, res) => {
-  res.sendFile(path.join(__dirname, "views", "new-page.html")); // using path
-});
-app.get("/old-page(.html)?", (req, res) => {
-  res.redirect(301, "./new-page.html"); // default code 302
-});
+app.use("/subdir", require("./routers/subdir"));
+app.use("/employee" , require("./routers/api/employee"))
+
+// app.get("^/$|index(.html)?", (req, res) => {
+//   // res.send("hello world!") sending only plain text
+//   // res.sendFile("./views/index.html" , {root: __dirname}) one way to do it;
+
+//   res.sendFile(path.join(__dirname, "views", "index.html")); // using path
+// });
+// app.get("/new-page(.html)?", (req, res) => {
+//   res.sendFile(path.join(__dirname, "views", "new-page.html")); // using path
+// });
+// app.get("/old-page(.html)?", (req, res) => {
+//   res.redirect(301, "./new-page.html"); // default code 302
+// });
 
 // handle routing
 
-app.get( // all is used for routes and use is used for setting middleware when a url is accessed 
+app.get(
+  // all is used for routes and use is used for setting middleware when a url is accessed
   "/hello(.html)?",
   (res, req, next) => {
     console.log("hello handle");
