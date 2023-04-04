@@ -4,29 +4,15 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const cors = require("cors");
+const corsOptions = require("./config/corsOptions")
 const errorHandler = require("./middleware/errorHandler");
 
 const PORT = process.env.port || 3500;
 
 // cross origin requests setup with white list sites only
 
-const whiteList = [
-  "https://www.google.com",
-  "http://127.0.0.1:5500",
-  "http://localhost:3500",
-];
-const corsOptions = {
-  origin: (origin, callback) => {
-    if (whiteList.indexOf(origin) !== -1 || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by cors"));
-    }
-  },
-  optionsSuccessStatus: 200,
-};
 
-app.use(cors());
+app.use(cors(corsOptions));
 
 // custom middleware
 
